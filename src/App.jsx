@@ -64,7 +64,7 @@ const App = () => {
 
 
   return (
-    <div className="bg-gray-200 bg-[url('./assets/images/bg-mobile-light.jpg')] bg-no-repeat bg-contain min-h-screen">
+    <div className="bg-gray-200 dark:bg-gray-800 bg-[url('./assets/images/bg-mobile-light.jpg')] bg-no-repeat bg-contain min-h-screen dark:bg-[url('./assets/images/bg-mobile-dark.jpg')]">
       <Header/>
 
       <main className="container mx-auto px-4 mt-8">
@@ -79,7 +79,7 @@ const App = () => {
       </main>
 
 
-      <footer className="text-center mt-8">
+      <footer className="text-center mt-8 dark:text-gray-400">
         Drag and drop items
       </footer>
     </div>

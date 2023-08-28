@@ -1,7 +1,7 @@
 const ToDoComputed = ({computedItemsLeft, clearCompletedItems}) => {
 
   return (
-    <section className="py-4 px-4 rounded-b-md flex justify-between bg-white">
+    <section className="py-4 px-4 rounded-b-md flex justify-between bg-white dark:bg-gray-800">
             <span className="text-gray-400"> {computedItemsLeft} tareas restantes</span>
             <button
             className="text-gray-400"
