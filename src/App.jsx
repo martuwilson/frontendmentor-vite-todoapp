@@ -8,23 +8,60 @@ import ToDoList from "./components/ToDoList"
 
 
 
-const InitialStateToDos = [
-  {
-    id: 1,
-    title: 'Complete online JavaScript course',
-    completed: false,
-  } ,
-  {
-    id: 2,
-    title: 'Jog around the park 3x',
-    completed: false,
-  } , 
-]
+const InitialStateToDos = []
 
 
 const App = () => {
+  // Tasks
+  const [todos, setTodos] = useState(InitialStateToDos);
+  // Filter tasks
+  const [filter, setFilter] = useState('all')
 
-  const [todos, setTodos] = useState(InitialStateToDos)
+  const createToDo = (title) => {
+    const newToDo = {
+      id: Date.now(),
+      title: title.trim(),
+      completed: false,
+    }
+
+    setTodos([...todos, newToDo])
+  }
+
+  const updateToDo = (id) => {
+    setTodos(todos.map((todo) => {
+      if (todo.id === id) {
+        return {...todo, completed: !todo.completed}
+      }
+      return todo
+    }))
+  }
+
+  const removeToDo = (id) => {
+    setTodos(todos.filter((todo) => todo.id !== id))
+  }
+
+  const computedItemsLeft = todos.filter((todo) => !todo.completed).length;
+  const clearCompletedItems = () => {
+    setTodos(todos.filter((todo) => !todo.completed))
+  }
+
+  /* Filters */
+
+  const changeFilter = (filter) => setFilter(filter)
+
+  const filteredToDos = () => {
+    switch (filter) {
+      case 'all':
+        return todos
+      case 'active':
+        return todos.filter((todo) => !todo.completed)
+      case 'completed':
+        return todos.filter((todo) => todo.completed)
+      default:
+        return todos
+    }
+  }
+
 
   return (
     <div className="bg-gray-200 bg-[url('./assets/images/bg-mobile-light.jpg')] bg-no-repeat bg-contain min-h-screen">
@@ -32,13 +69,13 @@ const App = () => {
 
       <main className="container mx-auto px-4 mt-8">
  
-        <ToDoCreate/> {/* Formulario */}
+        <ToDoCreate createToDo={createToDo}/> {/* Formulario */} {/* cada prop que se le manda luego en el componente tambien se llama en ({**aca**}) =>{...} */}
 
-        <ToDoList todos={todos}/> {/* Lista de tareas */}
+        <ToDoList todos={filteredToDos()} removeToDo={removeToDo} updateToDo={updateToDo}/> {/* Lista de tareas */}
 
-        <ToDoComputed/> 
+        <ToDoComputed computedItemsLeft={computedItemsLeft} clearCompletedItems={clearCompletedItems}/> 
           
-        <ToDoFilter/> {/* Filtro de tareas */}
+        <ToDoFilter changeFilter={changeFilter} filter={filter}/> {/* Filtro de tareas */}
       </main>
 
 
