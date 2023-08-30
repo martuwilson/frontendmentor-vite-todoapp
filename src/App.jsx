@@ -1,5 +1,5 @@
 
-import { useState } from "react"
+import { useState, useEffect} from "react"
 import Header from "./components/Header"
 import ToDoComputed from "./components/ToDoComputed"
 import ToDoCreate from "./components/ToDoCreate"
@@ -8,12 +8,17 @@ import ToDoList from "./components/ToDoList"
 
 
 
-const InitialStateToDos = []
+const InitialStateToDos = JSON.parse(localStorage.getItem('todos')) || []; // lo que hago aca es que si no hay nada en el local storage, que me devuelva un array vacio
 
 
 const App = () => {
   // Tasks
   const [todos, setTodos] = useState(InitialStateToDos);
+
+  useEffect(() => {
+    localStorage.setItem('todos', JSON.stringify(todos)); // JSON.stringify(todos) hace que se guarde en el local storage como un string
+  }, [todos])
+
   // Filter tasks
   const [filter, setFilter] = useState('all')
 
@@ -64,10 +69,10 @@ const App = () => {
 
 
   return (
-    <div className="bg-gray-200 dark:bg-gray-800 bg-[url('./assets/images/bg-mobile-light.jpg')] bg-no-repeat bg-contain min-h-screen dark:bg-[url('./assets/images/bg-mobile-dark.jpg')]">
+    <div className="bg-gray-200 dark:bg-gray-800 bg-[url('./assets/images/bg-mobile-light.jpg')] bg-no-repeat bg-contain min-h-screen dark:bg-[url('./assets/images/bg-mobile-dark.jpg')] md:bg-[url('./assets/images/bg-desktop-light.jpg')] md:dark:bg-[url('./assets/images/bg-desktop-light.jpg')] ">
       <Header/>
 
-      <main className="container mx-auto px-4 mt-8">
+      <main className="container mx-auto px-4 mt-8 md:max-w-xl">
  
         <ToDoCreate createToDo={createToDo}/> {/* Formulario */} {/* cada prop que se le manda luego en el componente tambien se llama en ({**aca**}) =>{...} */}
 
