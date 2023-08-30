@@ -1,3 +1,5 @@
+import { DragDropContext} from "@hello-pangea/dnd";
+
 
 import { useState, useEffect} from "react"
 import Header from "./components/Header"
@@ -9,6 +11,17 @@ import ToDoList from "./components/ToDoList"
 
 
 const InitialStateToDos = JSON.parse(localStorage.getItem('todos')) || []; // lo que hago aca es que si no hay nada en el local storage, que me devuelva un array vacio
+
+
+const reorder = (list, startIndex, endIndex) => {
+  const result = [...list];
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+
+  return result;
+};
+
+
 
 
 const App = () => {
@@ -67,6 +80,20 @@ const App = () => {
     }
   }
 
+  const handleDragEnd = (result) => {
+    const { destination, source } = result;
+    if (!destination) return;
+    if (
+        source.index === destination.index &&
+        source.droppableId === destination.droppableId
+    )
+        return;
+
+    setTodos((prevTasks) =>
+        reorder(prevTasks, source.index, destination.index)
+    );
+    };
+
 
   return (
     <div className="bg-gray-200 dark:bg-gray-800 bg-[url('./assets/images/bg-mobile-light.jpg')] bg-no-repeat bg-contain min-h-screen dark:bg-[url('./assets/images/bg-mobile-dark.jpg')] md:bg-[url('./assets/images/bg-desktop-light.jpg')] md:dark:bg-[url('./assets/images/bg-desktop-light.jpg')] ">
@@ -76,7 +103,10 @@ const App = () => {
  
         <ToDoCreate createToDo={createToDo}/> {/* Formulario */} {/* cada prop que se le manda luego en el componente tambien se llama en ({**aca**}) =>{...} */}
 
-        <ToDoList todos={filteredToDos()} removeToDo={removeToDo} updateToDo={updateToDo}/> {/* Lista de tareas */}
+
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <ToDoList todos={filteredToDos()} removeToDo={removeToDo} updateToDo={updateToDo}/> {/* Lista de tareas */}
+        </DragDropContext>
 
         <ToDoComputed computedItemsLeft={computedItemsLeft} clearCompletedItems={clearCompletedItems}/> 
           
@@ -85,7 +115,7 @@ const App = () => {
 
 
       <footer className="text-center mt-8 dark:text-gray-400">
-        Drag and drop items
+        You can drag and drop the items
       </footer>
     </div>
   )
